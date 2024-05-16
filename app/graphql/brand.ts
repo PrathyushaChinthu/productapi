@@ -22,23 +22,3 @@ export const FIND_BRAND = gql`
     }
   }
 `;
-
-export const CREATE_BRAND = gql`
-  mutation CreateBrand($input: CreateBrandDto!) {
-    createBrand(input: $input) {
-      id
-      name
-      active
-    }
-  }
-`;
-
-export const UPDATE_BRAND = gql`
-  mutation UpdateBrand($id: String!, $input: UpdateBrandDto!) {
-    updateBrand(id: $id, input: $input) {
-      id
-      name
-      active
-    }
-  }
-`;
