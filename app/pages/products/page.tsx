@@ -1,10 +1,12 @@
 'use client';
 import { Box, Grid, TextField, Typography } from '@mui/material';
-import { FIND_PRODUCTS } from '../graphql/product';
-import ProductsCard from './ProductCard';
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLazyQuery } from '@apollo/client';
-import type { IProduct } from '../types/product';
+import { IProduct } from '@/app/types/product';
+import { FIND_PRODUCTS } from '@/app/graphql/product';
+import ProductsCard from '@/app/components/ProductCard';
+import Drawer from '@/app/components/drawer';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -44,28 +46,37 @@ export default function Home() {
   return (
     <Box
       component={'main'}
-      sx={{ p: 2, bgcolor: '#eee', display: 'flex', justifyContent: 'center' }}
+      sx={{
+        bgcolor: '#eee',
+      }}
     >
-      <Grid container spacing={2} alignItems={'center'} sx={{ width: '70%' }}>
-        <Grid item xs={12} md={12}>
-          <Typography>Products</Typography>
+      <Grid container direction='row' p={2}>
+        <Grid item xs={12} md={2}>
+          <Drawer />
         </Grid>
-        <Grid item xs={12} md={12}>
-          <TextField
-            placeholder='Search...'
-            size='small'
-            variant='outlined'
-            fullWidth
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} md={12}>
-          {loading || queryLoading ? (
-            <Typography>Loading...</Typography>
-          ) : (
-            <ProductsCard products={products} />
-          )}
+        <Grid item xs={12} md={10}>
+          <Grid container spacing={2} alignItems={'center'}>
+            <Grid item xs={12}>
+              <Typography variant='h5'>Products</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                placeholder='Search...'
+                size='small'
+                variant='outlined'
+                fullWidth
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              {loading || queryLoading ? (
+                <Typography>Loading...</Typography>
+              ) : (
+                <ProductsCard products={products} />
+              )}
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Box>

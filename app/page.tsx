@@ -6,7 +6,8 @@ import {
   NextSSRApolloClient,
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr';
-import Home from './components/page';
+import Drawer from './components/drawer';
+import Home from './pages/products/page';
 
 function makeClient() {
   const httpLink = new HttpLink({
