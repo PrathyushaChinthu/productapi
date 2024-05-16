@@ -9,9 +9,9 @@ import {
 
 type Props = {
   filterName: string;
-  items: any;
-  selectedItems: any;
-  handleFilter: (value: string, name: string, filterName: string) => void;
+  items: string[];
+  selectedItems: { [key: string]: boolean };
+  handleFilter: (value: boolean, name: string) => void;
 };
 
 const CheckboxFilter = (props: Props) => {
@@ -23,17 +23,14 @@ const CheckboxFilter = (props: Props) => {
       </Typography>
       <Box sx={{ height: '200px', overflow: 'auto', p: 2 }}>
         <FormGroup>
-          {items?.map((brand: any) => {
+          {items?.map((brand: string) => {
             let checked = selectedItems[brand] ?? false;
             return (
               <FormControlLabel
                 key={brand}
-                control={<Checkbox />}
+                control={<Checkbox checked={checked} />}
                 label={brand}
-                checked={checked}
-                onChange={(e: any) =>
-                  handleFilter(e.target.checked, brand, filterName)
-                }
+                onChange={(e: any) => handleFilter(e.target.checked, brand)}
               />
             );
           })}
