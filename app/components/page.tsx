@@ -1,6 +1,5 @@
 'use client';
-
-import { Box, Grid, Button, Link, TextField, Typography } from '@mui/material';
+import { Box, Grid, TextField, Typography } from '@mui/material';
 import { FIND_PRODUCTS } from '../graphql/product';
 import ProductsCard from './ProductCard';
 import { useState, useEffect, useCallback, useRef } from 'react';
