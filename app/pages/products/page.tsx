@@ -50,7 +50,7 @@ export default function Home() {
         bgcolor: '#eee',
       }}
     >
-      <Grid container direction='row' p={2}>
+      <Grid container direction='row' p={2} spacing={2}>
         <Grid item xs={12} md={2}>
           <Drawer />
         </Grid>
