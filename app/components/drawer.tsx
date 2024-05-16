@@ -1,21 +1,27 @@
 import { Box, List, ListItem, ListItemButton, Typography } from '@mui/material';
 import React from 'react';
+import CheckboxFilter from './checkbox-filter';
 
 const AppDrawer = () => {
-  const filters = ['Brands', 'Categories'];
-
   return (
     <Box>
       <List>
-        {filters.map((filter) => (
-          <ListItem key={filter} disablePadding>
-            <ListItemButton onClick={() => {}}>
-              <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-                {filter}
-              </Typography>
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem disablePadding>
+          <CheckboxFilter
+            filterName='Brands'
+            items={brands}
+            selectedItems={selectedFilters.brands}
+            handleFilter={handleCheckboxFilter}
+          />
+        </ListItem>
+        <ListItem disablePadding>
+          <CheckboxFilter
+            filterName='Brands'
+            items={categories}
+            selectedItems={selectedFilters.categories}
+            handleFilter={handleCheckboxFilter}
+          />
+        </ListItem>
       </List>
     </Box>
   );
