@@ -17,7 +17,7 @@ type Props = {
 const CheckboxFilter = (props: Props) => {
   const { filterName, items, selectedItems, handleFilter } = props;
   return (
-    <Card sx={{ p: 2 }}>
+    <Card sx={{ p: 3 }}>
       <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
         {filterName}
       </Typography>

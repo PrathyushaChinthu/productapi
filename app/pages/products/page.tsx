@@ -15,6 +15,7 @@ export default function ProductsPage({ brands, categories }: Props) {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const fetchTimeoutRef = useRef<any>(null);
 
   const [findProducts, { loading: queryLoading }] = useLazyQuery(
@@ -30,7 +31,6 @@ export default function ProductsPage({ brands, categories }: Props) {
       },
     }
   );
-  console.log(brands, categories);
 
   const fetchProducts = useCallback(() => {
     setLoading(true);
@@ -47,6 +47,10 @@ export default function ProductsPage({ brands, categories }: Props) {
       fetchProducts();
     }, 500);
   }, [fetchProducts, searchTerm]);
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
 
   return (
     <Grid container spacing={2} alignItems={'center'}>
