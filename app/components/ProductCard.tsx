@@ -46,8 +46,9 @@ const ProductsCard = (props: Props) => {
                   <Image
                     src={product.imageUrl}
                     alt={product.title}
-                    layout='fill'
+                    fill
                     objectFit='contain'
+                    sizes='100'
                   />
                 </Box>
               </Link>

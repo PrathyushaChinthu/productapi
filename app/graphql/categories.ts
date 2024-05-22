@@ -1,8 +1,18 @@
 import { gql } from '@apollo/client';
 
 export const FIND_CATEGORIES = gql`
-  query FindCategories($filter: CategoryFilter, $skip: Int, $limit: Int) {
-    findCategories(filter: $filter, skip: $skip, limit: $limit) {
+  query FindCategories(
+    $filter: CategoryFilter
+    $skip: Int
+    $limit: Int
+    $search: CategorySearch
+  ) {
+    findCategories(
+      filter: $filter
+      skip: $skip
+      limit: $limit
+      search: $search
+    ) {
       categories {
         id
         name

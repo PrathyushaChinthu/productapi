@@ -10,5 +10,5 @@ export const NewCategoriesSchema = CategoriesSchema.omit({
   id: true,
 });
 
-export type ICategories = z.infer<typeof CategoriesSchema>;
-export type INewCategories = z.infer<typeof NewCategoriesSchema>;
+export type ICategory = z.infer<typeof CategoriesSchema>;
+export type INewCategory = z.infer<typeof NewCategoriesSchema>;

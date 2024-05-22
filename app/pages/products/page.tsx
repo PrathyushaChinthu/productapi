@@ -5,52 +5,50 @@ import { useLazyQuery } from '@apollo/client';
 import { IProduct } from '@/app/types/product';
 import { FIND_PRODUCTS } from '@/app/graphql/product';
 import ProductsCard from '@/app/components/ProductCard';
+import { IBrand } from '@/app/types/brand';
+import { ICategory } from '@/app/types/categories';
 
 type Props = {
-  brands: any;
-  categories: any;
+  brands: IBrand[];
+  categories: ICategory[];
+  products: IProduct[];
 };
 
-export default function ProductsPage({ brands, categories }: Props) {
+export default function ProductsPage({ brands, categories, products }: Props) {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [products, setProducts] = useState<IProduct[]>([]);
+  // const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const fetchTimeoutRef = useRef<any>(null);
 
-  const [findProducts, { loading: queryLoading }] = useLazyQuery(
-    FIND_PRODUCTS,
-    {
-      fetchPolicy: 'no-cache',
-      onCompleted: (data) => {
-        const { products: productsData = [] } = data?.findProducts || {
-          products: [],
-        };
-        setProducts(productsData);
-        setLoading(false);
-      },
-    }
-  );
+  // const [findProducts, { loading: queryLoading }] = useLazyQuery(
+  //   FIND_PRODUCTS,
+  //   {
+  //     fetchPolicy: 'no-cache',
+  //     onCompleted: (data) => {
+  //       const { products: productsData = [] } = data?.findProducts || {
+  //         products: [],
+  //       };
+  //       setProducts(productsData);
+  //       setLoading(false);
+  //     },
+  //   }
+  // );
 
-  const fetchProducts = useCallback(() => {
-    setLoading(true);
-    const searchFilter = searchTerm ? { title: searchTerm } : null;
+  // const fetchProducts = useCallback(() => {
+  //   setLoading(true);
+  //   const searchFilter = searchTerm ? { title: searchTerm } : null;
 
-    findProducts({ variables: { searchFilter } });
-  }, [findProducts, searchTerm]);
+  //   findProducts({ variables: { filter: { ...searchFilter } } });
+  // }, [findProducts, searchTerm]);
 
-  useEffect(() => {
-    if (fetchTimeoutRef.current) {
-      clearTimeout(fetchTimeoutRef.current);
-    }
-    fetchTimeoutRef.current = setTimeout(() => {
-      fetchProducts();
-    }, 500);
-  }, [fetchProducts, searchTerm]);
-
-  useEffect(() => {
-    setFilteredProducts(products);
-  }, [products]);
+  // useEffect(() => {
+  //   if (fetchTimeoutRef.current) {
+  //     clearTimeout(fetchTimeoutRef.current);
+  //   }
+  //   fetchTimeoutRef.current = setTimeout(() => {
+  //     fetchProducts();
+  //   }, 500);
+  // }, [fetchProducts, searchTerm]);
 
   return (
     <Grid container spacing={2} alignItems={'center'}>
@@ -68,7 +66,7 @@ export default function ProductsPage({ brands, categories }: Props) {
         />
       </Grid>
       <Grid item xs={12}>
-        {loading || queryLoading ? (
+        {loading ? (
           <Typography>Loading...</Typography>
         ) : (
           <ProductsCard products={products} />

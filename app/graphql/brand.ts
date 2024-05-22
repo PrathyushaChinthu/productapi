@@ -1,8 +1,13 @@
 import { gql } from '@apollo/client';
 
 export const FIND_BRANDS = gql`
-  query FindBrands($filter: BrandFilter, $skip: Int, $limit: Int) {
-    findBrands(filter: $filter, skip: $skip, limit: $limit) {
+  query FindBrands(
+    $filter: BrandFilter
+    $skip: Int
+    $limit: Int
+    $search: BrandSearch
+  ) {
+    findBrands(filter: $filter, skip: $skip, limit: $limit, search: $search) {
       brands {
         id
         name
