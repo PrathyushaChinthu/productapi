@@ -49,7 +49,11 @@ const HomeDashBoard = (props: Props) => {
   }, [findBrands, findCategories]);
 
   const handleBrandClick = (brandName: string) => {
-    router.push(`/brand?name=${brandName}`);
+    router.push(`/brands/brand=${brandName}`);
+  };
+
+  const handleCategoryClick = (categoryName: string) => {
+    router.push(`/categories/category=${categoryName}`);
   };
   useEffect(() => {
     fetchFilters();
@@ -74,7 +78,9 @@ const HomeDashBoard = (props: Props) => {
                   sx={{
                     p: 1,
                     height: '100%',
+                    cursor: 'pointer',
                   }}
+                  onClick={() => handleBrandClick(brand.name)}
                 >
                   <Typography>{brand.name}</Typography>
                 </Card>
@@ -105,7 +111,9 @@ const HomeDashBoard = (props: Props) => {
                   sx={{
                     padding: 1,
                     height: '100%',
+                    cursor: 'pointer',
                   }}
+                  onClick={() => handleCategoryClick(category.name)}
                 >
                   <Typography>{category.name}</Typography>
                 </Card>
