@@ -49,7 +49,8 @@ const HomeDashBoard = (props: Props) => {
   }, [findBrands, findCategories]);
 
   const handleBrandClick = (brandName: string) => {
-    router.push(`/brands/brand=${brandName}`);
+    // router.push(`/brands?brand=${brandName}`);
+    router.push(`/brands/${brandName}`);
   };
 
   const handleCategoryClick = (categoryName: string) => {
