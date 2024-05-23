@@ -5,7 +5,7 @@ import { FIND_PRODUCTS } from '@/app/graphql/product';
 import { ICategory } from '@/app/types/categories';
 import { IProduct } from '@/app/types/product';
 import { useLazyQuery } from '@apollo/client';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -14,7 +14,7 @@ const CategoryProductsPage = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
 
-  const [findProducts, { loading: queryLoading }] = useLazyQuery(
+  const [findProducts, { loading: productsLoading }] = useLazyQuery(
     FIND_PRODUCTS,
     {
       fetchPolicy: 'no-cache',
@@ -52,11 +52,14 @@ const CategoryProductsPage = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  //   console.log(products);
+  const loadingAll = productsLoading || categoriesLoading;
+
+  if (loadingAll) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <Box>
-      HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
       <ProductsCard products={products} />
     </Box>
   );
