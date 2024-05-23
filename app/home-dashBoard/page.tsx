@@ -53,7 +53,7 @@ const HomeDashBoard = (props: Props) => {
   };
 
   const handleCategoryClick = (categoryName: string) => {
-    router.push(`/categories/category=${categoryName}`);
+    router.push(`/categories?category=${categoryName}`);
   };
   useEffect(() => {
     fetchFilters();
