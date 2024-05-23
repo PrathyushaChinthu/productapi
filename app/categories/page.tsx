@@ -5,12 +5,14 @@ import { FIND_PRODUCTS } from '@/app/graphql/product';
 import { ICategory } from '@/app/types/categories';
 import { IProduct } from '@/app/types/product';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Typography } from '@mui/material';
-import { useSearchParams } from 'next/navigation';
+import { Box, Typography, Button } from '@mui/material';
+import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 
 const CategoryProductsPage = () => {
   const params = useSearchParams();
+  const router = useRouter();
+
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
 
@@ -60,6 +62,13 @@ const CategoryProductsPage = () => {
 
   return (
     <Box>
+      <Button
+        variant='contained'
+        sx={{ marginBottom: '30px' }}
+        onClick={() => router.push('/')}
+      >
+        Back
+      </Button>
       <ProductsCard products={products} />
     </Box>
   );
