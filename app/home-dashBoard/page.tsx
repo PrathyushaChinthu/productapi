@@ -9,9 +9,7 @@ import { FIND_BRANDS } from '@/app/graphql/brand';
 import { ICategory } from '../types/categories';
 import { FIND_CATEGORIES } from '../graphql/categories';
 
-type Props = {};
-
-const HomeDashBoard = (props: Props) => {
+const HomeDashBoard = () => {
   const [brands, setBrands] = useState<IBrand[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,7 +52,7 @@ const HomeDashBoard = (props: Props) => {
   };
 
   const handleCategoryClick = (categoryName: string) => {
-    router.push(`/categories?category=${categoryName}`);
+    router.push(`/categories/${categoryName}`);
   };
   useEffect(() => {
     fetchFilters();
