@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-
-import { Grid, Card, Typography, Stack, Box } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { Grid, Card, Typography, Box, Stack } from '@mui/material';
 import { IBrand } from '../types/brand';
 import { useLazyQuery } from '@apollo/client';
 import { FIND_BRANDS } from '@/app/graphql/brand';
@@ -15,6 +15,7 @@ const HomeDashBoard = (props: Props) => {
   const [brands, setBrands] = useState<IBrand[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const [findBrands, { loading: brandsLoading }] = useLazyQuery(FIND_BRANDS, {
     fetchPolicy: 'no-cache',
@@ -47,6 +48,9 @@ const HomeDashBoard = (props: Props) => {
     findCategories({ variables: { limit: 100 } });
   }, [findBrands, findCategories]);
 
+  const handleBrandClick = (brandName: string) => {
+    router.push(`/brand?name=${brandName}`);
+  };
   useEffect(() => {
     fetchFilters();
   }, [fetchFilters]);
