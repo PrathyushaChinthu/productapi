@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-
+import { useRouter } from 'next/navigation';
 import { Grid, Card, Typography } from '@mui/material';
 import { IBrand } from '../types/brand';
 import { useLazyQuery } from '@apollo/client';
@@ -12,6 +12,7 @@ type Props = {};
 const HomeDashBoard = (props: Props) => {
   const [brands, setBrands] = useState<IBrand[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const [findBrands, { loading: brandsLoading }] = useLazyQuery(FIND_BRANDS, {
     fetchPolicy: 'no-cache',
@@ -28,6 +29,10 @@ const HomeDashBoard = (props: Props) => {
     setLoading(true);
     findBrands({ variables: { limit: 100 } });
   }, [findBrands]);
+
+  const handleBrandClick = (brandName: string) => {
+    router.push(`/brand?name=${brandName}`);
+  };
 
   useEffect(() => {
     fetchFilters();
@@ -52,7 +57,9 @@ const HomeDashBoard = (props: Props) => {
               sx={{
                 padding: 1,
                 height: '100%',
+                cursor: 'pointer',
               }}
+              onClick={() => handleBrandClick(brand.name)}
             >
               <Typography>{brand.name}</Typography>
             </Card>
