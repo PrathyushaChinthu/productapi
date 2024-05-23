@@ -5,7 +5,7 @@ import { FIND_PRODUCTS } from '@/app/graphql/product';
 import { IBrand } from '@/app/types/brand';
 import { IProduct } from '@/app/types/product';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Grid } from '@mui/material';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -42,7 +42,7 @@ const BrandProductsPage = () => {
 
   const fetchProducts = useCallback(() => {
     findBrands();
-    findProducts({ variables: { filter: { brandId } } });
+    findProducts({ variables: { search: { brandId } } });
   }, [findBrands, findProducts, brandId]);
 
   useEffect(() => {
@@ -56,17 +56,20 @@ const BrandProductsPage = () => {
   }
 
   return (
-    <Box>
-      <Button
-        variant='contained'
-        sx={{ marginBottom: '30px' }}
-        onClick={() => router.push('/')}
-      >
-        Back
-      </Button>
-
-      <ProductsCard products={products} />
-    </Box>
+    <Grid container m={3}>
+      <Grid item xs={12} md={2}>
+        <Button
+          variant='contained'
+          sx={{ marginBottom: '30px' }}
+          onClick={() => router.push('/')}
+        >
+          Back
+        </Button>
+      </Grid>
+      <Grid item xs={12} md={8}>
+        <ProductsCard products={products} />
+      </Grid>
+    </Grid>
   );
 };
 

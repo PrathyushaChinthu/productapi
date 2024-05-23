@@ -47,7 +47,6 @@ const HomeDashBoard = () => {
   }, [findBrands, findCategories]);
 
   const handleBrandClick = (brandName: string) => {
-    // router.push(`/brands?brand=${brandName}`);
     router.push(`/brands/${brandName}`);
   };
 
@@ -65,8 +64,8 @@ const HomeDashBoard = () => {
   }
 
   return (
-    <Stack spacing={2} height={'100vh'} alignItems={'center'}>
-      <Stack height={'50%'} width={'90%'} spacing={2}>
+    <Stack spacing={2} height={'96vh'} alignItems={'center'}>
+      <Stack height={'50%'} width={'90%'} spacing={1}>
         <Typography variant='h5'>Brands</Typography>
         <Grid container spacing={2} rowGap={2} overflow={'auto'}>
           {brands.length > 0 ? (
