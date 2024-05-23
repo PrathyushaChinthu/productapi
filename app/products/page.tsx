@@ -6,7 +6,7 @@ import {
   NextSSRApolloClient,
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr';
-import HomeDashBoard from './home-dashBoard/page';
+import Drawer from './drawer/page';
 
 function makeClient() {
   const httpLink = new HttpLink({
@@ -31,7 +31,7 @@ function makeClient() {
 export default function ApolloWrapper() {
   return (
     <ApolloNextAppProvider makeClient={makeClient}>
-      <HomeDashBoard />
+      <Drawer />
     </ApolloNextAppProvider>
   );
 }
