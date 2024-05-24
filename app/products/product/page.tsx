@@ -6,7 +6,7 @@ import { IProduct } from '@/app/types/product';
 import { FIND_PRODUCTS } from '@/app/graphql/product';
 import ProductsCard from '@/app/components/ProductCard';
 import { IBrand } from '@/app/types/brand';
-import { ICategory } from '@/app/types/categories';
+import { ICategory } from '@/app/types/category';
 
 type Props = {
   brands: IBrand[];

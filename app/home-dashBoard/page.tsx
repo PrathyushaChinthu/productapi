@@ -6,8 +6,8 @@ import { Grid, Card, Typography, Box, Stack } from '@mui/material';
 import { IBrand } from '../types/brand';
 import { useLazyQuery } from '@apollo/client';
 import { FIND_BRANDS } from '@/app/graphql/brand';
-import { ICategory } from '../types/categories';
-import { FIND_CATEGORIES } from '../graphql/categories';
+import { ICategory } from '../types/category';
+import { FIND_CATEGORIES } from '../graphql/category';
 
 const HomeDashBoard = () => {
   const [brands, setBrands] = useState<IBrand[]>([]);

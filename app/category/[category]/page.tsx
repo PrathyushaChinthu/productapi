@@ -1,8 +1,8 @@
 'use client';
 import ProductsCard from '@/app/components/ProductCard';
-import { FIND_CATEGORIES } from '@/app/graphql/categories';
+import { FIND_CATEGORIES } from '@/app/graphql/category';
 import { FIND_PRODUCTS } from '@/app/graphql/product';
-import { ICategory } from '@/app/types/categories';
+import { ICategory } from '@/app/types/category';
 import { IProduct } from '@/app/types/product';
 import { useLazyQuery } from '@apollo/client';
 import { Box, Typography, Button, Grid } from '@mui/material';

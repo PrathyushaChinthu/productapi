@@ -6,14 +6,14 @@ import { useLazyQuery } from '@apollo/client';
 import { IBrand } from '@/app/types/brand';
 import { FIND_BRANDS } from '@/app/graphql/brand';
 import { useState, useEffect, useCallback } from 'react';
-import { ICategory } from '../../types/categories';
-import { FIND_CATEGORIES } from '../../graphql/categories';
+import { ICategory } from '../../types/category';
+import { FIND_CATEGORIES } from '../../graphql/category';
 import ProductsPage from '../product/page';
-import { FIND_SUB_CATEGORIES } from '@/app/graphql/subcategories';
-import { ISubcategory } from '@/app/types/subcategories';
+import { FIND_SUB_CATEGORIES } from '@/app/graphql/subcategory';
+import { ISubcategory } from '@/app/types/subcategory';
 import { IProduct } from '@/app/types/product';
 import { FIND_PRODUCTS } from '@/app/graphql/product';
-import { FIND_STORES } from '@/app/graphql/stores';
+import { FIND_STORES } from '@/app/graphql/store';
 import { useSearchParams } from 'next/navigation';
 
 const Drawer = () => {

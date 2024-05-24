@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ISubcategory } from '../types/subcategories';
+import { ISubcategory } from '../types/subcategory';
 
 interface CheckboxMenuProps {
   title: string;
