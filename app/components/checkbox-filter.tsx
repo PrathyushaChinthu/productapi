@@ -14,8 +14,10 @@ interface CheckboxMenuProps {
   title: string;
   items: string[];
   checked: boolean;
-  // handleCheckboxChange: (event: React.ChangeEvent) => void;
-  handleCheckboxChange: (item: string) => void;
+  handleCheckboxChange: (
+    item: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
 }
 
 const CheckboxFilter: React.FC<CheckboxMenuProps> = ({
@@ -25,7 +27,7 @@ const CheckboxFilter: React.FC<CheckboxMenuProps> = ({
   handleCheckboxChange,
 }) => {
   return (
-    <Box width='100%' px={2}>
+    <Box width='100%'>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -35,19 +37,17 @@ const CheckboxFilter: React.FC<CheckboxMenuProps> = ({
           {title}
         </AccordionSummary>
         <AccordionDetails>
-          <Stack sx={{ height: '200px', overflow: 'auto', p: 2 }}>
+          <Stack sx={{ height: '200px', overflow: 'auto' }}>
             {items.map((item, index) => (
               <Stack key={index} direction='row' alignItems='center'>
                 <Checkbox
                   checked={checked}
                   size='medium'
                   // onChange={handleCheckboxChange}
-                  onChange={() => handleCheckboxChange(item)}
+                  onChange={(event) => handleCheckboxChange(item, event)}
                   color='primary'
                 />
-                <Typography variant='subtitle1' fontSize='0.9rem'>
-                  {item}
-                </Typography>
+                <Typography variant='subtitle1'>{item}</Typography>
               </Stack>
             ))}
           </Stack>
