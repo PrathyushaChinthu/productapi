@@ -22,10 +22,8 @@ const CategoryProductsPage = () => {
   const [productsData, setProductsData] = useState<IProduct[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [brands, setBrands] = useState<IBrand[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
   const [stores, setStores] = useState<IStore[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState(false);
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
@@ -39,19 +37,6 @@ const CategoryProductsPage = () => {
         };
         setProductsData(productsData);
         setProducts(productsData);
-      },
-    }
-  );
-
-  const [findCategories, { loading: categoriesLoading }] = useLazyQuery(
-    FIND_CATEGORIES,
-    {
-      fetchPolicy: 'no-cache',
-      onCompleted: (data) => {
-        const { categories: categoriesData = [] } = data?.findCategories || {
-          categories: [],
-        };
-        setCategories(categoriesData);
       },
     }
   );
@@ -77,14 +62,13 @@ const CategoryProductsPage = () => {
     },
   });
 
-  const categoryId = categories.find((cat) => cat.name === params.category)?.id;
+  const category = decodeURI(params.category as string);
 
   const fetchProducts = useCallback(() => {
-    findCategories({ variables: { limit: 100 } });
     findBrands({ variables: { limit: 100 } });
     findStores({ variables: { limit: 100 } });
-    findProducts({ variables: { filter: { categoryId }, limit: 100 } });
-  }, [findProducts, findCategories, categoryId, findBrands, findStores]);
+    findProducts({ variables: { filter: { category }, limit: 100 } });
+  }, [findProducts, category, findBrands, findStores]);
 
   const handleFilterChange = (
     type: 'brand' | 'store',
@@ -99,14 +83,12 @@ const CategoryProductsPage = () => {
         : selectedBrands.filter((brand) => brand !== item);
 
       setSelectedBrands(updatedFilters);
-      // setProducts(productsData.filter((product) => product.category === item));
     } else {
       updatedFilters = checked
         ? [...selectedStores, item]
         : selectedStores.filter((store) => store !== item);
 
       setSelectedStores(updatedFilters);
-      // setProducts(productsData.filter((product) => product.store === item));
     }
 
     const filters = {
@@ -120,12 +102,6 @@ const CategoryProductsPage = () => {
     });
 
     router.push(`?${queryStringified}`);
-
-    // setProducts(
-    //   productsData.filter(
-    //     (product: IProduct) => product.brand === searchParams.get('brands')
-    //   )
-    // );
   };
 
   useEffect(() => {
@@ -153,60 +129,12 @@ const CategoryProductsPage = () => {
     }
   }, [searchParams, productsData]);
 
-  // useEffect(() => {
-  //   const brands = searchParams.getAll('brands');
-  //   const stores = searchParams.get('stores');
-  //   console.log(brands);
-  //   if (brands) {
-  //     setProducts(
-  //       productsData.filter((product) => brands.includes(product.brand))
-  //     );
-  //   } else if (stores) {
-  //     setProducts(productsData.filter((product) => product.store === stores));
-  //   } else if (brands.length > 0 && stores) {
-  //     setProducts(
-  //       productsData.filter(
-  //         (product) =>
-  //           brands.includes(product.brand) && product.store === stores
-  //       )
-  //     );
-  //   } else {
-  //     setProducts(productsData);
-  //   }
-  // }, [searchParams, productsData]);
-
-  // const handleBrandFilter = async (
-  //   item: string,
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   setIsChecked(event.target.checked);
-
-  //   if (item) {
-  //     setProducts(productsData.filter((product) => product.brand === item));
-  //   } else {
-  //     setProducts([]);
-  //   }
-  // };
-  // const handleStoreFilter = async (
-  //   item: any,
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   setIsChecked(event.target.checked);
-  //   const selectedStores: IProduct[] = productsData.filter(
-  //     (product) => product.store === item
-  //   );
-  //   if (selectedStores.length > 0) {
-  //     setProducts(productsData.filter((product) => product.store === item));
-  //   } else {
-  //     setProducts([]);
-  //   }
-  // };
-
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
-  const loadingAll = productsLoading || categoriesLoading;
+  const loadingAll =
+    loading || productsLoading || brandsLoading || storesLoading;
 
   if (loadingAll) {
     return <Typography>Loading...</Typography>;
