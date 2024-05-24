@@ -13,6 +13,7 @@ import { ICategory } from '@/app/types/category';
 import { FIND_CATEGORIES } from '@/app/graphql/category';
 import { FIND_STORES } from '@/app/graphql/store';
 import { IStore } from '@/app/types/store';
+import queryString from 'query-string';
 
 const BrandProductsPage = () => {
   const params = useParams();
@@ -23,8 +24,10 @@ const BrandProductsPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [brands, setBrands] = useState<IBrand[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [stores, setStores] = useState<any[]>([]);
-  const [isChecked, setIsChecked] = useState(false);
+  const [stores, setStores] = useState<IStore[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  const [selectedStores, setSelectedStores] = useState<string[]>([]);
 
   const [findProducts, { loading: productsLoading }] = useLazyQuery(
     FIND_PRODUCTS,
@@ -81,28 +84,53 @@ const BrandProductsPage = () => {
     findProducts({ variables: { filter: { brandId } } });
   }, [findBrands, findCategories, findStores, findProducts, brandId]);
 
-  const handleFilter = async (item: any) => {
-    const categoryId = categories.find((c) => c.name === item)?.id;
-    const storeId = stores.find((s) => s.name === item)?.id;
+  const handleFilterChange = (
+    type: 'category' | 'store',
+    item: string,
+    checked: boolean
+  ) => {
+    let updatedFilters: string[];
 
-    if (categoryId || storeId) {
-      try {
-        const { data } = await findProducts({
-          variables: {
-            filter: {
-              categoryId,
-              storeId,
-            },
-          },
-        });
-        setProducts(data?.findProducts?.products || []);
-      } catch (error) {
-        console.log(error);
-      }
+    if (type === 'category') {
+      updatedFilters = checked
+        ? [...selectedCategories, item]
+        : selectedCategories.filter((category) => category !== item);
+
+      setSelectedCategories(updatedFilters);
     } else {
-      findProducts();
+      updatedFilters = checked
+        ? [...selectedStores, item]
+        : selectedStores.filter((store) => store !== item);
+
+      setSelectedStores(updatedFilters);
     }
+
+    const filters = {
+      categories: type === 'category' ? updatedFilters : selectedCategories,
+
+      stores: type === 'store' ? updatedFilters : selectedStores,
+    };
+
+    const queryStringified = queryString.stringify(filters, {
+      arrayFormat: 'comma',
+      skipNull: true,
+    });
+
+    router.push(`/brand/${params.brand}/?${queryStringified}`);
+
+    findProducts({
+      variables: {
+        filter: {
+          brandId,
+
+          categoryId: filters.categories.length ? filters.categories : null,
+
+          storeId: filters.stores.length ? filters.stores : null,
+        },
+      },
+    });
   };
+
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -125,14 +153,18 @@ const BrandProductsPage = () => {
           <CheckboxFilter
             title='Categories'
             items={categories.map((category) => category.name)}
-            checked={isChecked}
-            handleCheckboxChange={handleFilter}
+            checkedItems={selectedCategories}
+            handleCheckboxChange={(item, checked) =>
+              handleFilterChange('category', item, checked)
+            }
           />
           <CheckboxFilter
             title='Store'
             items={stores.map((store) => store.name)}
-            checked={isChecked}
-            handleCheckboxChange={handleFilter}
+            checkedItems={selectedStores}
+            handleCheckboxChange={(item, checked) =>
+              handleFilterChange('store', item, checked)
+            }
           />
         </Stack>
       </Grid>
