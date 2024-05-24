@@ -46,7 +46,7 @@ const CategoryProductsPage = () => {
   const categoryId = categories.find((cat) => cat.name === category)?.id;
 
   const fetchProducts = useCallback(() => {
-    findCategories();
+    findCategories({ variables: { limit: 100 } });
     findProducts({ variables: { filter: { categoryId } } });
   }, [findCategories, findProducts, categoryId]);
 

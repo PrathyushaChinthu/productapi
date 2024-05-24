@@ -42,7 +42,7 @@ const BrandProductsPage = () => {
   const brandId = brands.find((b) => b.name === brand)?.id;
 
   const fetchProducts = useCallback(() => {
-    findBrands();
+    findBrands({ variables: { limit: 100 } });
     findProducts({ variables: { filter: { brandId } } });
   }, [findBrands, findProducts, brandId]);
 
