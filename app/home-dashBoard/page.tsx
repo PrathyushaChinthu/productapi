@@ -47,11 +47,11 @@ const HomeDashBoard = () => {
   }, [findBrands, findCategories]);
 
   const handleBrandClick = (brandName: string) => {
-    router.push(`/brands/${brandName}`);
+    router.push(`/brand/${brandName}`);
   };
 
   const handleCategoryClick = (categoryName: string) => {
-    router.push(`/categories/${categoryName}`);
+    router.push(`/category/${categoryName}`);
   };
   useEffect(() => {
     fetchFilters();
