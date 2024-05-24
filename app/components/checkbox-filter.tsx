@@ -10,20 +10,16 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-interface CheckboxMenuProps {
+type Props = {
   title: string;
   items: string[];
-  checked: boolean;
+  checkedItems: string[];
   // handleCheckboxChange: (event: React.ChangeEvent) => void;
-  handleCheckboxChange: (item: string) => void;
-}
+  handleCheckboxChange: (item: string, checked: boolean) => void;
+};
 
-const CheckboxFilter: React.FC<CheckboxMenuProps> = ({
-  title,
-  items,
-  checked,
-  handleCheckboxChange,
-}) => {
+const CheckboxFilter = (props: Props) => {
+  const { title, items, checkedItems, handleCheckboxChange } = props;
   return (
     <Box width='100%' px={2}>
       <Accordion>
@@ -39,10 +35,10 @@ const CheckboxFilter: React.FC<CheckboxMenuProps> = ({
             {items.map((item, index) => (
               <Stack key={index} direction='row' alignItems='center'>
                 <Checkbox
-                  checked={checked}
+                  checked={checkedItems.includes(item)}
                   size='medium'
                   // onChange={handleCheckboxChange}
-                  onChange={() => handleCheckboxChange(item)}
+                  onChange={(e) => handleCheckboxChange(item, e.target.checked)}
                   color='primary'
                 />
                 <Typography variant='subtitle1' fontSize='0.9rem'>
