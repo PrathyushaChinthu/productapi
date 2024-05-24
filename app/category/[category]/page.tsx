@@ -95,7 +95,6 @@ const CategoryProductsPage = () => {
     };
 
     const queryStringified = queryString.stringify(filters, {
-      arrayFormat: 'comma',
       skipNull: true,
     });
 
@@ -105,6 +104,25 @@ const CategoryProductsPage = () => {
   useEffect(() => {
     const brands = searchParams.getAll('brands');
     const stores = searchParams.get('stores');
+    // const stores = searchParams.getAll('stores');
+
+    // if (brands.length > 0) {
+    //   findProducts({
+    //     variables: { filter: { brand: brands, category: category } },
+    //   });
+    // } else if (stores.length > 0) {
+    //   findProducts({
+    //     variables: { filter: { store: stores, category: category } },
+    //   });
+    // } else if (brands.length > 0 && stores.length > 0) {
+    //   findProducts({
+    //     variables: {
+    //       filter: { brand: brands, store: stores, category: category },
+    //     },
+    //   });
+    // } else {
+    //   findProducts({ variables: { filter: { category: category } } });
+    // }
 
     if (brands.length > 0) {
       setProducts(
@@ -131,8 +149,7 @@ const CategoryProductsPage = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  const loadingAll =
-    loading || productsLoading || brandsLoading || storesLoading;
+  const loadingAll = loading || brandsLoading || storesLoading;
 
   if (loadingAll) {
     return <Typography>Loading...</Typography>;
@@ -168,7 +185,11 @@ const CategoryProductsPage = () => {
         </Stack>
       </Grid>
       <Grid item xs={12} md={8}>
-        <ProductsCard products={products} />
+        {productsLoading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <ProductsCard products={products} />
+        )}
       </Grid>
     </Grid>
   );
