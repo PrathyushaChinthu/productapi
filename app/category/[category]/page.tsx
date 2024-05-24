@@ -2,15 +2,13 @@
 import CheckboxFilter from '@/app/components/checkbox-filter';
 import ProductsCard from '@/app/components/ProductCard';
 import { FIND_BRANDS } from '@/app/graphql/brand';
-import { FIND_CATEGORIES } from '@/app/graphql/category';
 import { FIND_PRODUCTS } from '@/app/graphql/product';
 import { FIND_STORES } from '@/app/graphql/store';
 import { IBrand } from '@/app/types/brand';
-import { ICategory } from '@/app/types/category';
 import { IProduct } from '@/app/types/product';
 import { IStore } from '@/app/types/store';
 import { useLazyQuery } from '@apollo/client';
-import { Box, Typography, Button, Grid, Stack } from '@mui/material';
+import { Typography, Button, Grid, Stack } from '@mui/material';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -32,11 +30,11 @@ const CategoryProductsPage = () => {
     {
       fetchPolicy: 'no-cache',
       onCompleted: (data) => {
-        const { products: productsData = [] } = data?.findProducts || {
+        const { products: productData = [] } = data?.findProducts || {
           products: [],
         };
-        setProductsData(productsData);
-        setProducts(productsData);
+        setProductsData(productData);
+        setProducts(productData);
       },
     }
   );
