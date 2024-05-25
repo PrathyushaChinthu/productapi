@@ -48,7 +48,6 @@ const ProductsCard = (props: Props) => {
                     alt={product.title}
                     fill
                     objectFit='contain'
-                    sizes='100'
                   />
                 </Box>
               </Link>

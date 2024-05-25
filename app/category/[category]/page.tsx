@@ -60,14 +60,6 @@ const CategoryProductsPage = () => {
     },
   });
 
-  const category = decodeURI(params.category as string);
-
-  const fetchProducts = useCallback(() => {
-    findBrands({ variables: { limit: 100 } });
-    findStores({ variables: { limit: 100 } });
-    findProducts({ variables: { filter: { category }, limit: 100 } });
-  }, [findProducts, category, findBrands, findStores]);
-
   const handleFilterChange = (
     type: 'brand' | 'store',
     item: string,
@@ -101,53 +93,89 @@ const CategoryProductsPage = () => {
     router.push(`?${queryStringified}`);
   };
 
-  useEffect(() => {
-    const brands = searchParams.getAll('brands');
-    const stores = searchParams.get('stores');
-    // const stores = searchParams.getAll('stores');
+  const fetchBrands = useCallback(() => {
+    findBrands({ variables: { limit: 100 } });
+    findStores({ variables: { limit: 100 } });
+  }, [findBrands, findStores]);
 
-    // if (brands.length > 0) {
-    //   findProducts({
-    //     variables: { filter: { brand: brands, category: category } },
-    //   });
-    // } else if (stores.length > 0) {
-    //   findProducts({
-    //     variables: { filter: { store: stores, category: category } },
-    //   });
-    // } else if (brands.length > 0 && stores.length > 0) {
-    //   findProducts({
-    //     variables: {
-    //       filter: { brand: brands, store: stores, category: category },
-    //     },
-    //   });
-    // } else {
-    //   findProducts({ variables: { filter: { category: category } } });
-    // }
+  const fetchProducts = useCallback(() => {
+    const category = decodeURI(params.category as string);
+    const brands = searchParams.getAll('brands');
+    // const stores = searchParams.get('stores');
+    const stores = searchParams.getAll('stores');
 
     if (brands.length > 0) {
-      setProducts(
-        productsData.filter((product) =>
-          brands.every((brand) => brand === product.brand)
-        )
-      );
-    } else if (stores) {
-      setProducts(productsData.filter((product) => product.store === stores));
-    } else if (brands.length > 0 && stores) {
-      setProducts(
-        productsData.filter(
-          (product) =>
-            brands.every((brand) => brand === product.brand) &&
-            product.store === stores
-        )
-      );
+      findProducts({
+        variables: { filter: { brand: brands, category: category } },
+      });
+    } else if (stores.length > 0) {
+      findProducts({
+        variables: { filter: { store: stores, category: category } },
+      });
+    } else if (brands.length > 0 && stores.length > 0) {
+      findProducts({
+        variables: {
+          filter: { brand: brands, store: stores, category: category },
+        },
+      });
     } else {
-      setProducts(productsData);
+      findProducts({ variables: { filter: { category: category } } });
     }
-  }, [searchParams, productsData]);
+  }, [findProducts, params.category, searchParams]);
+
+  // console.log('products', products); hi
+
+  // useEffect(() => {
+  //   const brands = searchParams.getAll('brands');
+  //   // const stores = searchParams.get('stores');
+  //   const stores = searchParams.getAll('stores');
+
+  //   if (brands.length > 0) {
+  //     findProducts({
+  //       variables: { filter: { brand: brands, category: category } },
+  //     });
+  //   } else if (stores.length > 0) {
+  //     findProducts({
+  //       variables: { filter: { store: stores, category: category } },
+  //     });
+  //   } else if (brands.length > 0 && stores.length > 0) {
+  //     findProducts({
+  //       variables: {
+  //         filter: { brand: brands, store: stores, category: category },
+  //       },
+  //     });
+  //   } else {
+  //     findProducts({ variables: { filter: { category: category } } });
+  //   }
+
+  //   // if (brands.length > 0) {
+  //   //   setProducts(
+  //   //     productsData.filter((product) =>
+  //   //       brands.every((brand) => brand === product.brand)
+  //   //     )
+  //   //   );
+  //   // } else if (stores) {
+  //   //   setProducts(productsData.filter((product) => product.store === stores));
+  //   // } else if (brands.length > 0 && stores) {
+  //   //   setProducts(
+  //   //     productsData.filter(
+  //   //       (product) =>
+  //   //         brands.every((brand) => brand === product.brand) &&
+  //   //         product.store === stores
+  //   //     )
+  //   //   );
+  //   // } else {
+  //   //   setProducts(productsData);
+  //   // }
+  // }, [category, searchParams, productsData, findProducts]);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+
+  useEffect(() => {
+    fetchBrands();
+  }, [fetchBrands]);
 
   const loadingAll = loading || brandsLoading || storesLoading;
 
