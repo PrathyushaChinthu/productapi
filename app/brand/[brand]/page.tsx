@@ -86,7 +86,7 @@ const BrandProductsPage = () => {
     }
 
     const filters = {
-      brands: type === 'category' ? updatedFilters : selectedCategories,
+      categories: type === 'category' ? updatedFilters : selectedCategories,
       stores: type === 'store' ? updatedFilters : selectedStores,
     };
 
