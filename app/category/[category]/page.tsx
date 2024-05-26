@@ -17,7 +17,6 @@ const CategoryProductsPage = () => {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [productsData, setProductsData] = useState<IProduct[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [brands, setBrands] = useState<IBrand[]>([]);
   const [stores, setStores] = useState<IStore[]>([]);
@@ -33,7 +32,6 @@ const CategoryProductsPage = () => {
         const { products: productData = [] } = data?.findProducts || {
           products: [],
         };
-        setProductsData(productData);
         setProducts(productData);
       },
     }
@@ -95,79 +93,32 @@ const CategoryProductsPage = () => {
 
   const fetchBrands = useCallback(() => {
     findBrands({ variables: { limit: 100 } });
-    findStores({ variables: { limit: 100 } });
+    findStores({ variables: { limit: 50 } });
   }, [findBrands, findStores]);
 
   const fetchProducts = useCallback(() => {
     const category = decodeURI(params.category as string);
     const brands = searchParams.getAll('brands');
-    // const stores = searchParams.get('stores');
     const stores = searchParams.getAll('stores');
 
-    if (brands.length > 0) {
+    if (brands.length > 0 && stores.length > 0) {
       findProducts({
-        variables: { filter: { brand: brands, category: category } },
+        variables: {
+          filter: { brand: brands, category: category, store: stores },
+        },
       });
     } else if (stores.length > 0) {
       findProducts({
         variables: { filter: { store: stores, category: category } },
       });
-    } else if (brands.length > 0 && stores.length > 0) {
+    } else if (brands.length > 0) {
       findProducts({
-        variables: {
-          filter: { brand: brands, store: stores, category: category },
-        },
+        variables: { filter: { brand: brands, category: category } },
       });
     } else {
       findProducts({ variables: { filter: { category: category } } });
     }
   }, [findProducts, params.category, searchParams]);
-
-  // console.log('products', products); hi
-
-  // useEffect(() => {
-  //   const brands = searchParams.getAll('brands');
-  //   // const stores = searchParams.get('stores');
-  //   const stores = searchParams.getAll('stores');
-
-  //   if (brands.length > 0) {
-  //     findProducts({
-  //       variables: { filter: { brand: brands, category: category } },
-  //     });
-  //   } else if (stores.length > 0) {
-  //     findProducts({
-  //       variables: { filter: { store: stores, category: category } },
-  //     });
-  //   } else if (brands.length > 0 && stores.length > 0) {
-  //     findProducts({
-  //       variables: {
-  //         filter: { brand: brands, store: stores, category: category },
-  //       },
-  //     });
-  //   } else {
-  //     findProducts({ variables: { filter: { category: category } } });
-  //   }
-
-  //   // if (brands.length > 0) {
-  //   //   setProducts(
-  //   //     productsData.filter((product) =>
-  //   //       brands.every((brand) => brand === product.brand)
-  //   //     )
-  //   //   );
-  //   // } else if (stores) {
-  //   //   setProducts(productsData.filter((product) => product.store === stores));
-  //   // } else if (brands.length > 0 && stores) {
-  //   //   setProducts(
-  //   //     productsData.filter(
-  //   //       (product) =>
-  //   //         brands.every((brand) => brand === product.brand) &&
-  //   //         product.store === stores
-  //   //     )
-  //   //   );
-  //   // } else {
-  //   //   setProducts(productsData);
-  //   // }
-  // }, [category, searchParams, productsData, findProducts]);
 
   useEffect(() => {
     fetchProducts();
