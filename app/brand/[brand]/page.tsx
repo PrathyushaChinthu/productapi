@@ -68,24 +68,23 @@ const BrandProductsPage = () => {
     item: string,
     checked: boolean
   ) => {
-    let updatedCategories = selectedCategories;
-    let updatedStores = selectedStores;
+    let updatedFilters: string[];
 
     if (type === 'category') {
-      updatedCategories = checked
+      updatedFilters = checked
         ? [...selectedCategories, item]
         : selectedCategories.filter((category) => category !== item);
-      setSelectedCategories(updatedCategories);
-    } else if (type === 'store') {
-      updatedStores = checked
+      setSelectedCategories(updatedFilters);
+    } else {
+      updatedFilters = checked
         ? [...selectedStores, item]
         : selectedStores.filter((store) => store !== item);
-      setSelectedStores(updatedStores);
+      setSelectedStores(updatedFilters);
     }
 
     const filters = {
-      categories: updatedCategories,
-      stores: updatedStores,
+      categories: type === 'category' ? updatedFilters : selectedCategories,
+      stores: type === 'store' ? updatedFilters : selectedStores,
     };
 
     const queryStringified = queryString.stringify(filters, {
@@ -97,7 +96,7 @@ const BrandProductsPage = () => {
 
   const fetchCategories = useCallback(() => {
     findCategories({ variables: { limit: 100 } });
-    findStores({ variables: { limit: 100 } });
+    findStores({ variables: { limit: 50 } });
   }, [findCategories, findStores]);
 
   const fetchProducts = useCallback(() => {
@@ -105,18 +104,23 @@ const BrandProductsPage = () => {
     const categories = searchParams.getAll('categories');
     const stores = searchParams.getAll('stores');
 
-    const filters: any = { brand };
-
-    if (categories.length > 0) {
-      filters.category = categories;
+    if (categories.length > 0 && stores.length > 0) {
+      findProducts({
+        variables: {
+          filter: { category: categories, brand: brand, store: stores },
+        },
+      });
+    } else if (stores.length > 0) {
+      findProducts({
+        variables: { filter: { store: stores, brand: brand } },
+      });
+    } else if (categories.length > 0) {
+      findProducts({
+        variables: { filter: { category: categories, brand: brand } },
+      });
+    } else {
+      findProducts({ variables: { filter: { brand: brand } } });
     }
-    if (stores.length > 0) {
-      filters.store = stores;
-    }
-
-    findProducts({
-      variables: { filter: filters },
-    });
   }, [findProducts, params.brand, searchParams]);
 
   useEffect(() => {
