@@ -64,14 +64,6 @@ const BrandProductsPage = () => {
     },
   });
 
-  const brand = decodeURI(params.category as string);
-
-  const fetchProducts = useCallback(() => {
-    findCategories({ variables: { limit: 100 } });
-    findStores({ variables: { limit: 100 } });
-    findProducts({ variables: { filter: { brand }, limit: 100 } });
-  }, [findCategories, findStores, findProducts, brand]);
-
   const handleFilterChange = (
     type: 'category' | 'store',
     item: string,
@@ -94,7 +86,7 @@ const BrandProductsPage = () => {
     }
 
     const filters = {
-      categories: type === 'category' ? updatedFilters : selectedCategories,
+      brands: type === 'category' ? updatedFilters : selectedCategories,
       stores: type === 'store' ? updatedFilters : selectedStores,
     };
 
@@ -103,36 +95,44 @@ const BrandProductsPage = () => {
     });
 
     router.push(`?${queryStringified}`);
-    // router.push(`/brand/${params.brand}/?${queryStringified}`);
   };
-  useEffect(() => {
+
+  const fetchCategories = useCallback(() => {
+    findCategories({ variables: { limit: 100 } });
+    findStores({ variables: { limit: 100 } });
+  }, [findCategories, findStores]);
+
+  const fetchProducts = useCallback(() => {
+    const brand = decodeURI(params.brand as string);
     const categories = searchParams.getAll('categories');
-    const stores = searchParams.get('stores');
+    const stores = searchParams.getAll('stores');
 
     if (categories.length > 0) {
-      setProducts(
-        productsData.filter((product) =>
-          categories.every((category) => category === product.category)
-        )
-      );
-    } else if (stores) {
-      setProducts(productsData.filter((product) => product.store === stores));
-    } else if (categories.length > 0 && stores) {
-      setProducts(
-        productsData.filter(
-          (product) =>
-            categories.every((category) => category === product.category) &&
-            product.store === stores
-        )
-      );
+      findProducts({
+        variables: { filter: { category: categories, brand: brand } },
+      });
+    } else if (stores.length > 0) {
+      findProducts({
+        variables: { filter: { store: stores, brand: brand } },
+      });
+    } else if (categories.length > 0 && stores.length > 0) {
+      findProducts({
+        variables: {
+          filter: { category: categories, store: stores, brand: brand },
+        },
+      });
     } else {
-      setProducts(productsData);
+      findProducts({ variables: { filter: { brand: brand } } });
     }
-  }, [searchParams, productsData]);
+  }, [findProducts, params.brand, searchParams]);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const loadingAll =
     loading || productsLoading || categoriesLoading || storesLoading;
