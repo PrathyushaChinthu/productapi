@@ -24,7 +24,6 @@ const BrandProductsPage = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [stores, setStores] = useState<IStore[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
 
   const [findProducts, { loading: productsLoading }] = useLazyQuery(
@@ -69,25 +68,24 @@ const BrandProductsPage = () => {
     item: string,
     checked: boolean
   ) => {
-    let updatedFilters: string[];
+    let updatedCategories = selectedCategories;
+    let updatedStores = selectedStores;
 
     if (type === 'category') {
-      updatedFilters = checked
+      updatedCategories = checked
         ? [...selectedCategories, item]
         : selectedCategories.filter((category) => category !== item);
-
-      setSelectedCategories(updatedFilters);
-    } else {
-      updatedFilters = checked
+      setSelectedCategories(updatedCategories);
+    } else if (type === 'store') {
+      updatedStores = checked
         ? [...selectedStores, item]
         : selectedStores.filter((store) => store !== item);
-
-      setSelectedStores(updatedFilters);
+      setSelectedStores(updatedStores);
     }
 
     const filters = {
-      categories: type === 'category' ? updatedFilters : selectedCategories,
-      stores: type === 'store' ? updatedFilters : selectedStores,
+      categories: updatedCategories,
+      stores: updatedStores,
     };
 
     const queryStringified = queryString.stringify(filters, {
@@ -107,23 +105,18 @@ const BrandProductsPage = () => {
     const categories = searchParams.getAll('categories');
     const stores = searchParams.getAll('stores');
 
+    const filters: any = { brand };
+
     if (categories.length > 0) {
-      findProducts({
-        variables: { filter: { category: categories, brand: brand } },
-      });
-    } else if (stores.length > 0) {
-      findProducts({
-        variables: { filter: { store: stores, brand: brand } },
-      });
-    } else if (categories.length > 0 && stores.length > 0) {
-      findProducts({
-        variables: {
-          filter: { category: categories, store: stores, brand: brand },
-        },
-      });
-    } else {
-      findProducts({ variables: { filter: { brand: brand } } });
+      filters.category = categories;
     }
+    if (stores.length > 0) {
+      filters.store = stores;
+    }
+
+    findProducts({
+      variables: { filter: filters },
+    });
   }, [findProducts, params.brand, searchParams]);
 
   useEffect(() => {
